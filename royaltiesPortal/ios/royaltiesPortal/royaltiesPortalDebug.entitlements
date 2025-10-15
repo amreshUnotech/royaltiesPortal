@@ -7,9 +7,11 @@
 		<string>applinks:nonprod.royalties.umgapps.com</string>
 		<string>applinks:qa.royalties.umgapps.com</string>
 		<string>applinks:stage.royalties.umgapps.com</string>
-		<string>applinks:uat.royalties.umgapps.com"</string>
+		<string>applinks:uat.royalties.umgapps.com</string>
 		<string>applinks:preprod.royalties.umgapps.com</string>
 		<string>applinks:royalties.umgapps.com</string>
 	</array>
+	<key>aps-environment</key>
+	<string>development</string>
 </dict>
 </plist>
