@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "766226071303",
+    "project_id": "umg-umb-nonprod",
+    "storage_bucket": "umg-umb-nonprod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766226071303:android:fabd174116e22fa01acfa2",
+        "android_client_info": {
+          "package_name": "com.royaltiesportal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHSzTmlFt0_BnIRFOPpGKjCO7y8Wian68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766226071303:android:898722c879e0ff0c1acfa2",
+        "android_client_info": {
+          "package_name": "com.uat.royaltiesportal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHSzTmlFt0_BnIRFOPpGKjCO7y8Wian68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
