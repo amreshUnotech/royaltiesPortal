@@ -51,14 +51,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     return RCTLinkingManager.application(app, open: url, options: options)
   }
 
-  // func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-  //   // Pass token to Firebase Messaging
-  //   // Convert deviceToken to string for easier debugging
-  //   let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
-  //   let tokenString = tokenParts.joined()
-  //   print("Did register for remote notifications with device token: \(tokenString)")
-  //   Messaging.messaging().apnsToken = deviceToken
-  // }
+  func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    // Pass token to Firebase Messaging and to RNCPushNotificationIOS
+    let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+    let tokenString = tokenParts.joined()
+    print("Did register for remote notifications with device token: \(tokenString)")
+    Messaging.messaging().apnsToken = deviceToken
+    // Forward to RNCPushNotificationIOS (Objective-C bridge)
+    RNCPushNotificationIOS.didRegisterForRemoteNotifications(withDeviceToken: deviceToken)
+  }
+
+  func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    print("Failed to register for remote notifications: \(error.localizedDescription)")
+    RNCPushNotificationIOS.didFailToRegisterForRemoteNotificationsWithError(error)
+  }
+
+  func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    print("Received remote notification: \(userInfo)")
+    RNCPushNotificationIOS.didReceiveRemoteNotification(userInfo)
+    completionHandler(.newData)
+  }
+
+  // MARK: - MessagingDelegate
+  func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+    print("Firebase registration token: \(String(describing: fcmToken))")
+    let dataDict: [String: String] = ["token": fcmToken ?? ""]
+    NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+  }
+
+  // MARK: - UNUserNotificationCenterDelegate
+  @available(iOS 10.0, *)
+  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    let userInfo = notification.request.content.userInfo
+    print("Will present notification: \(userInfo)")
+    // Let RNCPushNotificationIOS handle it and show alert/badge/sound
+    RNCPushNotificationIOS.didReceiveRemoteNotification(userInfo)
+    completionHandler([.alert, .badge, .sound])
+  }
+
+  @available(iOS 10.0, *)
+  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    let userInfo = response.notification.request.content.userInfo
+    print("Did receive notification response: \(userInfo)")
+    RNCPushNotificationIOS.didReceiveNotificationResponse(response)
+    completionHandler()
+  }
 
   func application(
   _ application: UIApplication,
